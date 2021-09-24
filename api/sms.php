@@ -102,7 +102,7 @@ function curlGet($url,$cookie, $method = '', $post = '') {
 	$curl = curl_init();
 	curl_setopt($curl, CURLOPT_URL, $url); 
 	$headerArr = array("Content-Type:application/json; charset=UTF-8");
-	curl_setopt ($curl, CURLOPT_REFERER,  @$_SERVER['HTTP_HOST']);
+	curl_setopt ($curl, CURLOPT_REFERER,  @$_SERVER['HTTP_REFERER']);
 	curl_setopt ($curl, CURLOPT_HTTPHEADER , $headerArr);//构造headers	
 	curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);//curl_setopt($curl,CURLOPT_PROXY,'127.0.0.1:9999');//设置代理服务器    
 	curl_setopt($curl, CURLOPT_FOLLOWLOCATION, TRUE);
