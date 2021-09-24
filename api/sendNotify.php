@@ -4,8 +4,8 @@
 //#############修改企业微信推送参数################
 $userid="@all";
 $agentid="1000001";//替换你的
-$corpid = "替换你的 企业ID";
-$corpsecret = "替换你的 corpsecret";
+$corpid = "";//替换你的 企业ID
+$corpsecret = "";//替换你的 corpsecret
 //#################end####################
 function getPush($message) {
 	global $userid;
@@ -38,6 +38,7 @@ function getToken() {
 	$userinfo['access_token']=$access_token;
 	return $userinfo;
 }
+$REFERER=@$_SERVER['HTTP_REFERER'];
 //定义curl方法
 function curlPost($url,$data="") {
 	$ch = curl_init();

@@ -52,13 +52,13 @@ function smslogin_sendmsg($mobile) {
 }
 function dosmslogin($cookie,$mobile,$smscode) {
 	//短信换取CK
-	global $ps;
+	$ps=@$GLOBALS["ps"];
 	$url="http://jd.zack.xin/sms/jd/api/jdsms.php";
 	$data = json_encode(array('mobile' => $mobile,'smsCode' => $smscode,'ps' => $ps));
 	$r=curlGet($url,$cookie,"post",$data);
 	$r_json=json_decode($r);
 	$status=$r_json->status;
-	//err_code=0
+	
 	if($status==200) {
 		$JDcookie=$r_json->cookie;
 		$time=date('Y-m-d H:i:s',time());
@@ -102,7 +102,7 @@ function curlGet($url,$cookie, $method = '', $post = '') {
 	$curl = curl_init();
 	curl_setopt($curl, CURLOPT_URL, $url); 
 	$headerArr = array("Content-Type:application/json; charset=UTF-8");
-	curl_setopt ($curl, CURLOPT_REFERER,  @$_SERVER['HTTP_REFERER']);
+	curl_setopt ($curl, CURLOPT_REFERER,@$GLOBALS['REFERER']);
 	curl_setopt ($curl, CURLOPT_HTTPHEADER , $headerArr);//构造headers	
 	curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);//curl_setopt($curl,CURLOPT_PROXY,'127.0.0.1:9999');//设置代理服务器    
 	curl_setopt($curl, CURLOPT_FOLLOWLOCATION, TRUE);
