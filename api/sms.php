@@ -47,7 +47,7 @@ function smslogin_sendmsg($mobile) {
 	//获取短信
 	$url="http://jd.zack.xin/sms/jd/api/jdsms.php";
 	$data = json_encode(array('mobile' => $mobile));
-	$r=curlGet($url,"","0","post",$data);
+	$r=curlGet($url,"","post",$data);
 	die($r);
 }
 function dosmslogin($cookie,$mobile,$smscode) {
@@ -55,7 +55,7 @@ function dosmslogin($cookie,$mobile,$smscode) {
 	global $ps;
 	$url="http://jd.zack.xin/sms/jd/api/jdsms.php";
 	$data = json_encode(array('mobile' => $mobile,'smsCode' => $smscode,'ps' => $ps));
-	$r=curlGet($url,$cookie,"0","post",$data);
+	$r=curlGet($url,$cookie,"post",$data);
 	$r_json=json_decode($r);
 	$status=$r_json->status;
 	//err_code=0
@@ -68,8 +68,8 @@ function dosmslogin($cookie,$mobile,$smscode) {
 		} else {
 			$weixin_msg= "【JD COOKIE】【短信端】\n【".$time."】\n【".$mobile."】\n【备注：".$ps."】  \n【COOKIE】:\n".$JDcookie;
 		}
-		getPush($weixin_msg);
-		//企业微信推送
+		getPush($weixin_msg);//企业微信推送
+		
 		CK_tmp($JDcookie,$mobile);
 		die($r);
 	} else {
@@ -77,6 +77,7 @@ function dosmslogin($cookie,$mobile,$smscode) {
 		die($r);
 	}
 }
+
 ///////////////////////////////////////////////////////////////////////////////////
 function CK_tmp($ck_str,$user) {
 	$content=$ck_str;
@@ -96,22 +97,17 @@ function CK_tmp($ck_str,$user) {
 	file_put_contents($file, $content,FILE_APPEND);
 }
 ///////////////////////////////////////////////////////////////////////////////////
-function curlGet($url,$cookie, $HEADER="",$method = '', $post = '') {
+function curlGet($url,$cookie, $method = '', $post = '') {
 	//模拟登陆 抓取内容
 	$curl = curl_init();
-	curl_setopt($curl, CURLOPT_URL, $url);
-	if ($HEADER == '1') {
-		curl_setopt($curl, CURLOPT_HEADER, 1);
-	}
+	curl_setopt($curl, CURLOPT_URL, $url); 
 	$headerArr = array("Content-Type:application/json; charset=UTF-8");
-	curl_setopt ($curl, CURLOPT_HTTPHEADER , $headerArr);
-	//构造headers
-	curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    //curl_setopt($curl,CURLOPT_PROXY,'127.0.0.1:9999');//设置代理服务器
+	curl_setopt ($curl, CURLOPT_REFERER,  @$_SERVER['HTTP_HOST']);
+	curl_setopt ($curl, CURLOPT_HTTPHEADER , $headerArr);//构造headers	
+	curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);//curl_setopt($curl,CURLOPT_PROXY,'127.0.0.1:9999');//设置代理服务器    
 	curl_setopt($curl, CURLOPT_FOLLOWLOCATION, TRUE);
 	curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-	curl_setopt($curl, CURLOPT_COOKIE, $cookie);
-	//使用上面获取的cookies
+	curl_setopt($curl, CURLOPT_COOKIE, $cookie);//使用上面获取的cookies	
 	if ($method == 'post') {
 		curl_setopt($curl, CURLOPT_POST, 1);
 		curl_setopt($curl, CURLOPT_POSTFIELDS,$post);
@@ -119,7 +115,6 @@ function curlGet($url,$cookie, $HEADER="",$method = '', $post = '') {
 	curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 	curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 	$str = curl_exec($curl);
-	// $str = iconv("GBK", "UTF-8//IGNORE", $str);
 	curl_close($curl);
 	unset($curl);
 	return $str;
