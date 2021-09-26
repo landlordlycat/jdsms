@@ -3,7 +3,7 @@
 <br/>
 **PHP 环境运行（请确定运行环境）
 <br/>
-1. 自行修改 /api/sendNotify.php 里的 企业微信推送 参数
+1. 自行修改 /api/sendNotify.php 里的 企业微信推送 参数</br>
 2. /images目录下 wx.png和qq.png 替换自己微信和QQ群 二维码图片
 
 # 自用
